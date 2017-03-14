@@ -1,0 +1,129 @@
+/**
+ * Definition of ListNode
+ * class ListNode {
+ * public:
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int val) {
+ *         this->val = val;
+ *         this->next = NULL;
+ *     }
+ * }
+ */
+class Solution {
+public:
+    /**
+     * @param head: The first node of linked list.
+     * @return: You should return the head of the sorted linked list,
+                    using constant space complexity.
+     */
+    ListNode *findmid(ListNode *head) {
+        if (!head) return NULL;
+        ListNode *a2=head;
+        ListNode *a1=head;
+        while(!a1 && !a2) {
+            a2=a2->next->next;
+            a1=a1->next;
+        }
+        return a1;
+    }
+    ListNode *merge(ListNode *left , ListNode *right) {
+        if (!left || !right) return NULL;
+        ListNode *node=new ListNode(0);
+        ListNode *res=node;
+        while (left && right) {
+            if (left->val < right->val) {
+                ListNode *tmp;
+                tmp = left;
+                left=left->next;
+                res->next = tmp;
+                res=res->next;
+            }else {
+                ListNode *tmp;
+                tmp = right;
+                right=right->next;
+                res->next = tmp;
+                res=res->next;
+            }
+        }
+        if (left) res->next = left;
+        else res->next = right;
+        return node->next;
+    }
+    ListNode *sortList(ListNode *head) {
+        // write your code here
+        if (!head || !head->next) return head;
+        ListNode *mid =findmid(head);
+        ListNode *temp=mid->next;
+        mid->next = NULL;
+        ListNode *left=sortList(head);
+        ListNode *right=sortList(temp);
+        
+        return merge(left , right);
+    }
+};
+
+//
+
+/**
+ * Definition of ListNode
+ * class ListNode {
+ * public:
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int val) {
+ *         this->val = val;
+ *         this->next = NULL;
+ *     }
+ * }
+ */
+class Solution {
+public:
+    /**
+     * @param head: The first node of linked list.
+     * @return: You should return the head of the sorted linked list,
+                    using constant space complexity.
+     */
+    ListNode *sortList(ListNode *head) {
+        // write your code here
+        if (!head || !head->next) return head;
+        ListNode *pivot = head;
+        head=head->next;
+        pivot->next = NULL;
+        ListNode *p= pivot;
+        
+        ListNode *small = new ListNode(0);
+        ListNode *large = new ListNode(0);
+        ListNode *s = small;
+        ListNode *l = large;
+        
+        while (head) {
+            if (head->val > pivot->val) {
+                l->next=head;
+                l=l->next;
+            } else if (head->val == pivot->val) {
+                p->next=head;
+                p=p->next;
+            } else {
+                s->next = head;
+                s= s->next;
+            }
+            head=head->next;
+        }
+        s->next = NULL;
+        l->next = NULL;
+        ListNode *ss = sortList(small->next);
+        if (!ss) {
+            ss = pivot;
+        }else {
+            ListNode *tmp = ss;
+            while (tmp->next) {
+                tmp = tmp->next;
+            }
+            tmp->next = pivot;
+        }
+        ListNode *ll = sortList(large->next) ;
+        p->next = ll;
+        return ss;
+    }
+};
